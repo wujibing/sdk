@@ -82,6 +82,15 @@ func (p *Predict) OpenImage(reader io.Reader) error {
 	return p.readImage(reader, &p.Image)
 }
 
+func (p *Predict) OpenImageByUrl(url string) error {
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	return p.readImage(resp.Body, &p.Image)
+}
+
 func (p *Predict) GetResponse() interface{} {
 	if p.response == nil {
 		p.response = &PredictResponse{}
@@ -124,6 +133,7 @@ func (r *ReportError) ReqPre() {
 func (r *ReportError) Method() string {
 	return "reporterror.json"
 }
+
 func SetUsername(username, password string) {
 	_username = username
 	_password = password
